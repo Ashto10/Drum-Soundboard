@@ -1,0 +1,247 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins|Ubuntu+Mono')
+    
+$boardBackground: #262626
+$boardShadow: darken($boardBackground, 7)
+$buttonDefault: blue
+$buttonPressed: red
+$buttonPower: green
+$offset: 10%
+
+$slightBend: 30px
+$proportionalBend: 3%
+
+/*https://github.com/darlanrod/input-range-scss/blob/master/_inputrange.scss*/
+$thumb-height: 52px !default
+$track-color: #111 !default
+$track-height: 18px !default
+$track-border-width: 2px !default
+$track-border-color: none !default
+$track-radius: 2px !default
+
+=ButtonContainer($color: white, $shape: circle)
+  position: relative
+  overflow: hidden
+  
+  &::before
+    content: ''
+    display: block
+    position: absolute
+    bottom: 0
+    width: 100%
+    height: 50%
+    background: radial-gradient($shape at bottom, $color, #171717)
+    border: 1px solid darken($boardBackground, 10)
+  
+=BendEdges($bottomLeftCorner)
+  border-radius: 5% $proportionalBend $bottomLeftCorner $slightBend
+  
+=track
+  cursor: default
+  height: $track-height
+  transition: all .2s ease
+  border: 2px solid darken($track-color, 1)
+  border-right: 3px solid lighten($track-color, 1)
+  border-left: 1px solid darken($track-color, 5)
+
+=thumb($adjustment: 0)
+  background: radial-gradient(farthest-corner at 57% 40%, #282c33, #0e0e11)
+  border: 2px solid lighten(#0e0e11, 4)
+  border-left: 3px solid #0e0e11
+  border-right: 1px solid lighten(#0e0e11, 10)
+  border-radius: 6px
+  cursor: default
+  height: $thumb-height + $adjustment
+  width: 24px + $adjustment
+  cursor: pointer
+  
+%machineSection
+  background: rgba($boardBackground, 0.2)
+  height: 90%
+  position: absolute
+  
+%button
+  background: radial-gradient(farthest-corner at 57% 40%, #282c33, #0e0e11)
+  width: 100%
+  height: 85%
+  box-sizing: border-box
+  position: absolute
+  user-select: none
+  cursor: pointer
+
+html
+  min-height: 100%
+  background: repeating-linear-gradient(55deg, #444 0%, #3A3A3A 1%, #444 2%)
+  font-family: 'Poppins', sans-serif
+  
+#drum-machine
+  +BendEdges($slightBend)
+  margin: 10vh auto 0
+  width: 960px
+  height: 700px
+  position: relative
+  overflow: hidden
+  box-sizing: border-box
+  border-left: 4px solid $boardShadow
+  background: radial-gradient(farthest-side at 30% 30%, $boardBackground, $boardShadow)
+  
+#left-side
+  @extend %machineSection
+  border-radius: $proportionalBend 0 0 $slightBend
+  width: 70%
+  
+#drum-pad-container
+  width: 90%
+  height: 85%
+  margin: 7.5% 5%
+  display: flex
+  flex-wrap: wrap
+  align-content: space-around
+  justify-content: space-around
+
+.drum-pad-outer
+  +BendEdges(10px)
+  +ButtonContainer($buttonDefault, circle)
+  width: 28%
+  height: 17%
+  
+  .drum-pad
+    @extend %button
+    +BendEdges(10px)
+    border-left: 2px solid darken($buttonDefault, 20)
+    padding: 6px 16px
+    
+    .clip-name, .key
+      text-align: right
+      opacity: 0.8
+      margin: 0
+      
+    .clip-name
+      color: #e8e8e8
+      font-size: 16pt
+      
+    .key
+      color: #949599
+      font-size: 18pt
+      text-transform: uppercase
+      
+  &:active, &.pressed
+    &::before
+      background: radial-gradient(ellipse at bottom, $buttonPressed, #171717)
+  
+    .drum-pad
+      top: $offset
+      border-left-color: darken($buttonPressed, 10)
+    
+#right-side
+  @extend %machineSection
+  width: 30%
+  right: 0
+  border-radius: 0 $proportionalBend $slightBend 0
+  
+#power-outer
+  +BendEdges($slightBend)
+  +ButtonContainer($buttonPower, circle)
+  width: 50%
+  height: 60px
+  margin: 50px 20%
+  
+  &:active
+    #power
+      top: $offset
+  
+  #power
+    @extend %button
+    +BendEdges($slightBend)
+    border-left: 2px solid darken($buttonPower, 10)
+    border-right: 2px solid darken($buttonPower, 10)
+    text-align: center
+    line-height: 45px
+    color: #e8e8e8
+    font-size: 1.5em
+    text-transform: uppercase
+  
+#display
+  border-radius: 10px
+  color: rgba(30,30,30,0.8)
+  background: repeating-linear-gradient(38deg, #b7b796 10%, #a8a87c 30%, #b7b796 50%)
+  margin: 95px 5% 0
+  width: 80%
+  height: 80px
+  line-height: 60px
+  box-sizing: border-box
+  border: 8px solid lighten($boardBackground,15)
+  border-top: 10px solid lighten($boardBackground, 5)
+  border-bottom: 6px solid lighten($boardBackground, 25)
+  font-size: 2em
+  text-align: center
+  font-family: 'Ubuntu Mono', monospace
+  
+#volume 
+  -webkit-appearance: none
+  background: transparent
+  margin: 100px $thumb-height / 2 0
+  width: 75%
+  transform: rotateZ(270deg)
+  
+  &::-moz-focus-outer 
+    border: 0
+  
+  &:focus 
+    outline: 0
+
+  &::-webkit-slider-runnable-track 
+    +track
+    background: $track-color
+    border: $track-border-width solid $track-border-color
+    border-radius: $track-radius
+
+  &::-webkit-slider-thumb 
+    +thumb
+    -webkit-appearance: none
+    margin-top: ((-$track-border-width * 2 + $track-height) / 2 - $thumb-height / 2)
+
+  &::-moz-range-track 
+    +track
+    background: $track-color
+    border: $track-border-width solid $track-border-color
+    border-radius: $track-radius
+    height: $track-height / 2  
+
+  &::-moz-range-thumb 
+    +thumb(-4)
+
+  &::-ms-track 
+    +track
+    background: transparent
+    border-color: transparent
+    border-width: ($thumb-height / 2) 0
+    color: transparent
+
+  &::-ms-fill-lower 
+    background: darken($track-color, 5%)
+    border: $track-border-width solid $track-border-color
+    border-radius: ($track-radius * 2)
+
+  &::-ms-fill-upper 
+    background: $track-color
+    border: $track-border-width solid $track-border-color
+    border-radius: ($track-radius * 2)
+
+  &::-ms-thumb 
+    +thumb(-4)
+    margin-top: $track-height / 4
+  
+#drum-machine.powered-off
+  .drum-pad-outer:active
+    .drum-pad
+      top: $offset
+  .drum-pad-outer::before, #power-outer::before
+    background: radial-gradient(farthest-side at bottom, #222, black)
+  .drum-pad, #power
+    border-left-color: #333
+    border-right-color: #333
+  .drum-pad .clip-name, #power
+    color: gray
+  #display
+    color: transparent
+    transition: color 0.7s ease-in
