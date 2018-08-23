@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Poppins|Ubuntu+Mono')
-    
 $boardBackground: #262626
 $boardShadow: darken($boardBackground, 7)
 $buttonDefault: blue
@@ -7,16 +5,16 @@ $buttonPressed: red
 $buttonPower: green
 $offset: 10%
 
-$slightBend: 30px
+$slightBend: 20px
 $proportionalBend: 3%
 
 /*https://github.com/darlanrod/input-range-scss/blob/master/_inputrange.scss*/
-$thumb-height: 52px !default
-$track-color: #111 !default
-$track-height: 18px !default
-$track-border-width: 2px !default
-$track-border-color: none !default
-$track-radius: 2px !default
+$thumb-height: 40px 
+$track-color: #111 
+$track-height: 18px 
+$track-border-width: 2px 
+$track-border-color: none 
+$track-radius: 2px 
 
 =ButtonContainer($color: white, $shape: circle)
   position: relative
@@ -51,12 +49,12 @@ $track-radius: 2px !default
   border-radius: 6px
   cursor: default
   height: $thumb-height + $adjustment
-  width: 24px + $adjustment
+  width: 20px + $adjustment
   cursor: pointer
   
 %machineSection
   background: rgba($boardBackground, 0.2)
-  height: 90%
+  width: 100%
   position: absolute
   
 %button
@@ -67,17 +65,20 @@ $track-radius: 2px !default
   position: absolute
   user-select: none
   cursor: pointer
+  
+html, body, #root
+  height: 100%
+  margin: 0
 
-html
-  min-height: 100%
+body
   background: repeating-linear-gradient(55deg, #444 0%, #3A3A3A 1%, #444 2%)
   font-family: 'Poppins', sans-serif
+  font-size: 10pt
   
 #drum-machine
-  +BendEdges($slightBend)
-  margin: 10vh auto 0
-  width: 960px
-  height: 700px
+  margin: 0 auto
+  width: 100%
+  height: 100%
   position: relative
   overflow: hidden
   box-sizing: border-box
@@ -86,13 +87,13 @@ html
   
 #left-side
   @extend %machineSection
-  border-radius: $proportionalBend 0 0 $slightBend
-  width: 70%
+  height: 70%
+  bottom: 0
   
 #drum-pad-container
-  width: 90%
+  width: 100%
   height: 85%
-  margin: 7.5% 5%
+  margin: 7.5% 0
   display: flex
   flex-wrap: wrap
   align-content: space-around
@@ -108,21 +109,18 @@ html
     @extend %button
     +BendEdges(10px)
     border-left: 2px solid darken($buttonDefault, 20)
-    padding: 6px 16px
+    padding: 0.5em
     
     .clip-name, .key
       text-align: right
       opacity: 0.8
-      margin: 0
       
     .clip-name
       color: #e8e8e8
-      font-size: 16pt
+      font-size: 1em
       
     .key
-      color: #949599
-      font-size: 18pt
-      text-transform: uppercase
+      display: none
       
   &:active, &.pressed
     &::before
@@ -134,16 +132,19 @@ html
     
 #right-side
   @extend %machineSection
-  width: 30%
-  right: 0
-  border-radius: 0 $proportionalBend $slightBend 0
+  height: 30%
+  top: 0
   
+%rightSideItems
+  display: inline-block
+
 #power-outer
   +BendEdges($slightBend)
   +ButtonContainer($buttonPower, circle)
-  width: 50%
-  height: 60px
-  margin: 50px 20%
+  @extend %rightSideItems
+  width: 30%
+  height: 30%
+  margin: 8%
   
   &:active
     #power
@@ -155,19 +156,19 @@ html
     border-left: 2px solid darken($buttonPower, 10)
     border-right: 2px solid darken($buttonPower, 10)
     text-align: center
-    line-height: 45px
+    line-height: 275%
     color: #e8e8e8
-    font-size: 1.5em
+    font-size: 1em
     text-transform: uppercase
   
 #display
   border-radius: 10px
   color: rgba(30,30,30,0.8)
   background: repeating-linear-gradient(38deg, #b7b796 10%, #a8a87c 30%, #b7b796 50%)
-  margin: 95px 5% 0
-  width: 80%
-  height: 80px
-  line-height: 60px
+  margin: 9% auto 0
+  width: 85%
+  height: 40%
+  line-height: 175%
   box-sizing: border-box
   border: 8px solid lighten($boardBackground,15)
   border-top: 10px solid lighten($boardBackground, 5)
@@ -176,12 +177,13 @@ html
   text-align: center
   font-family: 'Ubuntu Mono', monospace
   
-#volume 
+#volume
   -webkit-appearance: none
+  @extend %rightSideItems
   background: transparent
-  margin: 100px $thumb-height / 2 0
-  width: 75%
-  transform: rotateZ(270deg)
+  width: 45%
+  height: 60%
+  position: relative
   
   &::-moz-focus-outer 
     border: 0
@@ -245,3 +247,119 @@ html
   #display
     color: transparent
     transition: color 0.7s ease-in
+    
+@media screen and (orientation: landscape)
+  =rotateMachineParts($width) 
+    width: $width
+    height: 100%
+
+  #left-side
+    +rotateMachineParts(60%) 
+
+  #right-side
+    +rotateMachineParts(40%) 
+    right: 0 
+
+  %rightSideItems
+    display: inline-block
+
+  #power-outer
+    width: 40% 
+    height: 15% 
+    margin: 0 10% 30% 
+
+  #display
+    margin: 13% auto 
+    height: 22% 
+    line-height: 200% 
+    font-size: 1.75em 
+
+  #volume
+    width: 50% 
+    margin-left: -17%
+    margin-top: -12%
+    left: 6% 
+    transform: rotate(270deg)
+
+@media only screen and (min-device-width: 768px) and (min-height: 768px) and (orientation: landscape)
+  $thumb-height: 56px
+  
+  =thumb($adjustment: 0)
+    height: $thumb-height + $adjustment
+    width: 25px + $adjustment
+
+  body
+    font-size: 14pt 
+
+  #drum-machine
+    margin-top: 5vh 
+    width: 90% 
+    height: 90%
+    max-width: 1000px
+    max-height: 768px
+    +BendEdges($slightBend)
+
+  #left-side
+    border-radius: $proportionalBend 0 0 $slightBend 
+    height: 90% 
+    width: 65% 
+    left: 0 
+    top: 0 
+    bottom: auto 
+
+  #drum-pad-container
+    width: 90% 
+    height: 90% 
+    margin: 7.5%
+    
+    .clip-name
+      margin-top: .25em
+      margin-right: 0.3em
+    
+    .key
+      display: block
+      margin-top: 0.3em
+      margin-right: 0.2em
+      font-size: 1.2em
+      font-weight: bold
+      color: gray
+      text-transform: uppercase
+
+  #right-side
+    border-radius: 0 $proportionalBend $slightBend 0 
+    height: 90% 
+    width: 30% 
+    padding-right: 5% 
+
+  #power-outer
+    width: 50% 
+    height: 10% 
+    margin: 18% 25% 10%
+    display: block
+
+  #display
+    font-size: 1.75em
+    line-height: 2.4em
+    margin-top: 32% 
+    height: 15% 
+
+  #volume
+    width: 80% 
+    display: block 
+    height: 75% 
+    top: -10% 
+    left: 30% 
+
+    &::-webkit-slider-thumb 
+      +thumb
+      -webkit-appearance: none
+      margin-top: ((-$track-border-width * 2 + $track-height) / 2 - $thumb-height / 2) 
+
+    &::-moz-range-thumb 
+      +thumb(-4)
+
+    &::-ms-track 
+      border-width: ($thumb-height / 2) 0
+
+    &::-ms-thumb 
+      +thumb(-4)
