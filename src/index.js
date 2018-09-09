@@ -55,7 +55,9 @@ class App extends React.Component {
           </div>
         </div>
         <div id="right-side">
-          <div id="display">{this.state.currentClip}</div>
+          <div id="display-container">
+            <div id="display">{this.state.currentClip}</div>
+          </div>
           <div id="power-outer" onClick={this.togglePower}>
             <div id="power">Power</div>
           </div>
@@ -118,6 +120,11 @@ class DrumPad extends React.Component {
       this.audioObject.volume = this.props.volume;
     }
 
+    let showKey;
+    if (typeof window.orientation !== "undefined" || navigator.userAgent.indexOf('IEMobile') !== -1) {
+      showKey = <div className="key">{this.props.clipInfo.key}</div>;
+    }
+
     return (
       <div
         className={`drum-pad-outer ${this.state.active ? 'pressed' : ''}`}
@@ -125,6 +132,7 @@ class DrumPad extends React.Component {
         <div className="drum-pad" id={this.props.clipInfo.nameOfClip}>
           <div className="clip-name">{this.props.clipInfo.nameOfClip}</div>
           <div className="key">{this.props.clipInfo.key}</div>
+          <showKey />
           <audio className="clip" src={this.props.clipInfo.srcOfClip} id={this.props.clipInfo.key}></audio>
         </div>
       </div>

@@ -56,6 +56,11 @@ $track-radius: 2px
   background: rgba($boardBackground, 0.2)
   width: 100%
   position: absolute
+  display: flex
+  flex-wrap: wrap
+  justify-content: space-around
+  align-content: space-around
+  align-items: center
   
 %button
   background: radial-gradient(farthest-corner at 57% 40%, #282c33, #0e0e11)
@@ -68,7 +73,6 @@ $track-radius: 2px
   
 html, body, #root
   height: 100%
-  margin: 0
 
 body
   background: repeating-linear-gradient(55deg, #444 0%, #3A3A3A 1%, #444 2%)
@@ -87,13 +91,12 @@ body
   
 #left-side
   @extend %machineSection
-  height: 70%
+  height: 60%
   bottom: 0
   
 #drum-pad-container
-  width: 100%
-  height: 85%
-  margin: 7.5% 0
+  width: 90%
+  height: 100%
   display: flex
   flex-wrap: wrap
   align-content: space-around
@@ -102,26 +105,8 @@ body
 .drum-pad-outer
   +BendEdges(10px)
   +ButtonContainer($buttonDefault, circle)
-  width: 28%
-  height: 17%
-  
-  .drum-pad
-    @extend %button
-    +BendEdges(10px)
-    border-left: 2px solid darken($buttonDefault, 20)
-    padding: 0.5em
-    
-    .clip-name, .key
-      text-align: right
-      opacity: 0.8
-      
-    .clip-name
-      color: #e8e8e8
-      font-size: 1em
-      
-    .key
-      display: none
-      
+  width: 30%
+  height: 17%      
   &:active, &.pressed
     &::before
       background: radial-gradient(ellipse at bottom, $buttonPressed, #171717)
@@ -129,22 +114,56 @@ body
     .drum-pad
       top: $offset
       border-left-color: darken($buttonPressed, 10)
+  
+.drum-pad
+  @extend %button
+  +BendEdges(10px)
+  border-left: 2px solid darken($buttonDefault, 20)
+  padding: 0.25em 0.5em
+
+  .clip-name, .key
+    text-align: right
+    opacity: 0.8
+
+  .clip-name
+    color: #e8e8e8
+
+  .key
+    font-size: 0.7em
+    margin-top: 0.25em
+    color: gray
+    text-transform: uppercase
     
 #right-side
   @extend %machineSection
-  height: 30%
+  height: 40%
   top: 0
+  right: 0
   
-%rightSideItems
-  display: inline-block
+#display-container
+  display: table
+  height: 30%
+  width: 85%
+  box-sizing: border-box
+  border: 8px solid lighten($boardBackground,15)
+  border-top: 10px solid lighten($boardBackground, 5)
+  border-bottom: 6px solid lighten($boardBackground, 25)
+  background: repeating-linear-gradient(38deg, #b7b796 10%, #a8a87c 30%, #b7b796 50%)
+  border-radius: 10px
+  
+#display
+  display: table-cell
+  vertical-align: middle
+  color: rgba(30,30,30,0.8)
+  font-size: 1.5em
+  text-align: center
+  font-family: 'Ubuntu Mono', monospace
 
 #power-outer
   +BendEdges($slightBend)
   +ButtonContainer($buttonPower, circle)
-  @extend %rightSideItems
   width: 30%
-  height: 30%
-  margin: 8%
+  height: 20%
   
   &:active
     #power
@@ -161,28 +180,10 @@ body
     font-size: 1em
     text-transform: uppercase
   
-#display
-  border-radius: 10px
-  color: rgba(30,30,30,0.8)
-  background: repeating-linear-gradient(38deg, #b7b796 10%, #a8a87c 30%, #b7b796 50%)
-  margin: 9% auto 0
-  width: 85%
-  height: 40%
-  line-height: 175%
-  box-sizing: border-box
-  border: 8px solid lighten($boardBackground,15)
-  border-top: 10px solid lighten($boardBackground, 5)
-  border-bottom: 6px solid lighten($boardBackground, 25)
-  font-size: 2em
-  text-align: center
-  font-family: 'Ubuntu Mono', monospace
-  
 #volume
   -webkit-appearance: none
-  @extend %rightSideItems
   background: transparent
-  width: 45%
-  height: 60%
+  width: 40%
   position: relative
   
   &::-moz-focus-outer 
@@ -248,118 +249,68 @@ body
     color: transparent
     transition: color 0.7s ease-in
     
-@media screen and (orientation: landscape)
-  =rotateMachineParts($width) 
-    width: $width
-    height: 100%
-
-  #left-side
-    +rotateMachineParts(60%) 
-
-  #right-side
-    +rotateMachineParts(40%) 
-    right: 0 
-
-  %rightSideItems
-    display: inline-block
-
-  #power-outer
-    width: 40% 
-    height: 15% 
-    margin: 0 10% 30% 
-
-  #display
-    margin: 13% auto 
-    height: 22% 
-    line-height: 200% 
-    font-size: 1.75em 
-
-  #volume
-    width: 50% 
-    margin-left: -17%
-    margin-top: -12%
-    left: 6% 
-    transform: rotate(270deg)
-
-@media only screen and (min-device-width: 768px) and (min-height: 768px) and (orientation: landscape)
-  $thumb-height: 56px
-  
-  =thumb($adjustment: 0)
-    height: $thumb-height + $adjustment
-    width: 25px + $adjustment
-
+@media only screen and (min-height: 350px)
   body
-    font-size: 14pt 
-
+    font-size: 14pt    
+    
+@media only screen and (min-height: 700px)
+  body
+    font-size: 20pt
+    
+@media only screen and (orientation: landscape)
+  #left-side
+    width: 70%
+    height: 100%
+    #drum-pad-container
+      width: 80%
+      height: 80%
+      
+  #right-side
+    width: 28%
+    padding-right: 2%
+    height: 100%
+    flex-direction: column
+    flex-wrap: nowrap
+    
+    #display-container
+      height: 15%
+      width: 100%
+      margin-top: 10%
+    
+    #power-outer
+      height: 15%
+      width: 60%
+      margin-top: 3%
+      min-height: 40px
+      max-height: 80px
+      max-width: 180px
+      
+    #volume
+      height: 45%
+      width: 30vh
+      max-width: 300px
+      transform: rotateZ(-90deg)
+      
+@media only screen and (min-device-width: 1024px) and (min-width: 1024px) and (orientation: landscape)
+  
+  #root
+    display: flex
+    align-items: center
+    
   #drum-machine
-    margin-top: 5vh 
-    width: 90% 
-    height: 90%
+    width: 80%
+    height: 80%
     max-width: 1000px
     max-height: 768px
     +BendEdges($slightBend)
-
+  
+  #left-side, #right-side
+    height: 90%
+    top: 0
+    
   #left-side
-    border-radius: $proportionalBend 0 0 $slightBend 
-    height: 90% 
-    width: 65% 
-    left: 0 
-    top: 0 
-    bottom: auto 
-
-  #drum-pad-container
-    width: 90% 
-    height: 90% 
-    margin: 7.5%
+    border-radius: $proportionalBend 0 0 $slightBend
     
-    .clip-name
-      margin-top: .25em
-      margin-right: 0.3em
-    
-    .key
-      display: block
-      margin-top: 0.3em
-      margin-right: 0.2em
-      font-size: 1.2em
-      font-weight: bold
-      color: gray
-      text-transform: uppercase
-
   #right-side
-    border-radius: 0 $proportionalBend $slightBend 0 
-    height: 90% 
-    width: 30% 
-    padding-right: 5% 
-
-  #power-outer
-    width: 50% 
-    height: 10% 
-    margin: 18% 25% 10%
-    display: block
-
-  #display
-    font-size: 1.75em
-    line-height: 2.4em
-    margin-top: 32% 
-    height: 15% 
-
-  #volume
-    width: 80% 
-    display: block 
-    height: 75% 
-    top: -10% 
-    left: 30% 
-
-    &::-webkit-slider-thumb 
-      +thumb
-      -webkit-appearance: none
-      margin-top: ((-$track-border-width * 2 + $track-height) / 2 - $thumb-height / 2) 
-
-    &::-moz-range-thumb 
-      +thumb(-4)
-
-    &::-ms-track 
-      border-width: ($thumb-height / 2) 0
-
-    &::-ms-thumb 
-      +thumb(-4)
+    border-radius: 0 $proportionalBend $slightBend 0
+    
